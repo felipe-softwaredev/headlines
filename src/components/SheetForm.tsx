@@ -1,5 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+
+import { ChevronLeft } from 'lucide-react';
+
+import { ChevronRight } from 'lucide-react';
 
 import {
   Sheet,
@@ -8,6 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from '@/components/ui/sheet';
 import ColorForm from './ColorForm';
 
@@ -22,6 +27,28 @@ import ColorForm from './ColorForm';
 
 export default function SheetForm({ colors, setColors }: any) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const divRef = useRef(null);
+  const polygonRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (divRef.current) {
+      divRef.current.classList.add('!bg-red-500');
+    }
+    if (polygonRef.current) {
+      polygonRef.current.classList.add('!fill-red-500');
+    }
+  };
+
+  // Handler for mouse leave event
+  const handleMouseLeave = () => {
+    if (divRef.current) {
+      divRef.current.classList.remove('!bg-red-500');
+    }
+    if (polygonRef.current) {
+      polygonRef.current.classList.remove('!fill-red-500');
+    }
+  };
 
   useEffect(() => {
     // Save colors to localStorage whenever they change
@@ -59,14 +86,36 @@ export default function SheetForm({ colors, setColors }: any) {
 
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-      <SheetTrigger className="px-2">
-        <button onClick={() => setIsOpen(true)} className="flex flex-col z-50">
-          <span>O</span>
-          <span>P</span>
-          <span>E</span>
-          <span>N</span>
-        </button>
+      <div
+        // className={`${
+        //   !isOpen ? 'w-1.5 hover:shadow-lg !bg-white/20 rounded' : ''
+        // } `}
+        className="test-div w-1.5"
+        ref={divRef}
+        // onMouseEnter={handleMouseEnter}
+        // onMouseLeave={handleMouseLeave}
+        // onClick={() => setIsOpen(true)}
+      ></div>
+      <SheetTrigger className=" absolute right-0  top-1/2 -translate-y-1/2 !w-fit !h-fit flex">
+        {!isOpen && (
+          <svg width="110" height="80" viewBox="0 0 45 40" className="-mr-1">
+            <polygon
+              points="45,0 38,20 45,40"
+              onClick={() => setIsOpen(true)}
+              className="fill-white cursor-pointer border"
+              ref={polygonRef}
+              // onMouseEnter={handleMouseEnter}
+              // onMouseLeave={handleMouseLeave}
+            />
+          </svg>
+        )}
       </SheetTrigger>
+
+      {isOpen && (
+        <button onClick={() => setIsOpen(false)} className="flex flex-col z-50">
+          <ChevronRight className="p-0 m-0 w-fit flex" />
+        </button>
+      )}
 
       <SheetContent side="right" className="h-auto">
         <SheetHeader>
