@@ -45,10 +45,12 @@ const getNews = async () => {
       sortBy: 'relevancy',
       category: 'sports',
     });
+    console.log(articles);
 
     return articles;
   } catch (err) {
     counter = 0;
+    console.log(err);
     return lastResponse;
   }
 };
@@ -56,8 +58,13 @@ const getNews = async () => {
 setInterval(async () => {
   res = await getNews();
 }, 900000);
+// setInterval(async () => {
+//   res = await getNews();
+//   console.log(res);
+// }, 2000);
 
 io.on('connection', (socket) => {
+  console.log(res);
   socket.emit('news', res);
   setInterval(async () => {
     socket.emit('news', res);
@@ -67,4 +74,5 @@ io.on('connection', (socket) => {
 server.listen(PORT, async () => {
   console.log('Server connected on port: ' + PORT);
   res = await getNews();
+  console.log(res);
 });

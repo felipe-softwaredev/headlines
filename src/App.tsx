@@ -30,7 +30,7 @@ function App() {
   // This useEffect will run whenever any color in the array changes
 
   return (
-    <div className=" flex h-screen">
+    <div className=" flex h-screen ">
       <SocketApp colors={colors} />
       {/* <DrawerForm colors={colors} setColors={setColors} /> */}
       <SheetForm colors={colors} setColors={setColors} />

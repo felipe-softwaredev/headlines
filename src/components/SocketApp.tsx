@@ -21,6 +21,8 @@ const SocketApp = ({ colors }: any) => {
       setSocketData(newsArr);
     };
 
+    console.log('hello');
+
     socket.on('news', handleNews);
 
     console.log(socketData);
@@ -31,6 +33,10 @@ const SocketApp = ({ colors }: any) => {
     };
   }, []);
 
+  const arr = new Array(6);
+  arr.fill(0); // Fills the array with 0s
+  console.log(arr);
+
   return (
     <div className="grid grid-rows-6 h-screen w-full">
       {socketData &&
@@ -39,6 +45,16 @@ const SocketApp = ({ colors }: any) => {
             data={article.data}
             id={article.id}
             key={article.id}
+            color={colors[index]}
+          />
+        ))}
+      {/* {!socketData && arr.map((item, index) => <Headline unavailable={true} />)} */}
+      {!socketData &&
+        arr.map((item, index) => (
+          <Headline
+            unavailable={true}
+            id={index}
+            key={index}
             color={colors[index]}
           />
         ))}

@@ -1,10 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
-
 import { ChevronLeft } from 'lucide-react';
-
-import { ChevronRight } from 'lucide-react';
-
 import {
   Sheet,
   SheetContent,
@@ -16,124 +11,130 @@ import {
 } from '@/components/ui/sheet';
 import ColorForm from './ColorForm';
 
-// const defaultColors = [
-//   { bgColor: '#00b3ff', textColor: '#ffffff', brightness: 'brightness(1)' },
-//   { bgColor: '#0be6a0', textColor: '#ffffff', brightness: 'brightness(1)' },
-//   { bgColor: '#ffc400', textColor: '#ffffff', brightness: 'brightness(1)' },
-//   { bgColor: '#ff0037', textColor: '#ffffff', brightness: 'brightness(1)' },
-//   { bgColor: '#720ed0', textColor: '#ffffff', brightness: 'brightness(1)' },
-//   { bgColor: '#111212', textColor: '#ffffff', brightness: 'brightness(1)' },
-// ];
-
 export default function SheetForm({ colors, setColors }: any) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const divRef = useRef(null);
-  const polygonRef = useRef(null);
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const drawTriangle = (opacity: number = 0.4) => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`; // Set the fill color with opacity
+        ctx.beginPath();
+        ctx.moveTo(18, 0); // Top-right point
+        ctx.lineTo(0, 30); // Middle-left point
+        ctx.lineTo(18, 60); // Bottom-right point
+        ctx.closePath();
+        ctx.fill(); // Fill the triangle
+      }
+    }
+  };
+
+  useEffect(() => {
+    drawTriangle();
+    if (!isOpen && divRef.current) {
+      divRef.current.classList.remove('bg-opacity-100'); // Remove low opacity class
+      divRef.current.classList.add('bg-opacity-40'); // Add full opacity class
+    }
+  }, [isOpen]); // Trigger re-drawing when the `isOpen` state changes
 
   const handleMouseEnter = () => {
+    drawTriangle(1); // Change opacity to 1 for the triangle
     if (divRef.current) {
-      divRef.current.classList.add('!bg-red-500');
-    }
-    if (polygonRef.current) {
-      polygonRef.current.classList.add('!fill-red-500');
+      // divRef.current.style.backgroundColor = 'red'; // Reset div opacity to 0.4
+      // console.log('hovered');
+      // divRef.current.style.opacity = '0.8';
+      // divRef.current.style.opacity = '1'; // Set div opacity to 1
+      divRef.current.classList.remove('bg-opacity-40'); // Remove low opacity class
+      divRef.current.classList.add('bg-opacity-100'); // Add full opacity class
     }
   };
 
-  // Handler for mouse leave event
   const handleMouseLeave = () => {
+    drawTriangle(0.4); // Reset opacity to 0.4 for the triangle
     if (divRef.current) {
-      divRef.current.classList.remove('!bg-red-500');
-    }
-    if (polygonRef.current) {
-      polygonRef.current.classList.remove('!fill-red-500');
+      // divRef.current.style.opacity = '0.4';
+
+      // divRef.current.style.backgroundColor = 'white'; // Reset div opacity to 0.4
+      divRef.current.classList.remove('bg-opacity-100'); // Remove low opacity class
+      divRef.current.classList.add('bg-opacity-40'); // Add full opacity class
     }
   };
-
-  useEffect(() => {
-    // Save colors to localStorage whenever they change
-    const br = colors.map((color: any) => color.brightness);
-    console.log('on enter:' + br);
-    // localStorage.setItem('colors', JSON.stringify(colors));
-  }, [colors]);
-
-  useEffect(() => {
-    console.log(isOpen);
-  }, [isOpen]);
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
-    if (open) {
-      // When sheet is opened, change brightness of each color
-      const updatedColors = colors.map((color: any) => ({
-        ...color,
-        brightness: 'brightness(0.2)', // Update brightness to 0.8
-      }));
-      setColors(updatedColors);
-      console.log(colors);
-    } else {
-      // Optionally, you can revert brightness or perform any other action when closed
-      // console.log('close');
-      const resetColors = colors.map((color: any) => ({
-        ...color,
-        brightness: 'brightness(1)', // Reset brightness to 1 when closed
-      }));
-
-      setColors(resetColors);
-      console.log(resetColors);
-    }
+    const updatedColors = colors.map((color: any) => ({
+      ...color,
+      brightness: open ? 'brightness(0.2)' : 'brightness(1)', // Adjust brightness based on open state
+    }));
+    setColors(updatedColors);
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-      <div
-        // className={`${
-        //   !isOpen ? 'w-1.5 hover:shadow-lg !bg-white/20 rounded' : ''
-        // } `}
-        className="test-div w-1.5"
-        ref={divRef}
-        // onMouseEnter={handleMouseEnter}
-        // onMouseLeave={handleMouseLeave}
-        // onClick={() => setIsOpen(true)}
-      ></div>
-      <SheetTrigger className=" absolute right-0  top-1/2 -translate-y-1/2 !w-fit !h-fit flex">
-        {!isOpen && (
-          <svg width="110" height="80" viewBox="0 0 45 40" className="-mr-1">
-            <polygon
-              points="45,0 38,20 45,40"
-              onClick={() => setIsOpen(true)}
-              className="fill-white cursor-pointer border"
-              ref={polygonRef}
-              // onMouseEnter={handleMouseEnter}
-              // onMouseLeave={handleMouseLeave}
-            />
-          </svg>
-        )}
-      </SheetTrigger>
+    <>
+      <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+        <SheetTrigger
+          className="absolute right-0 top-1/2 -translate-y-1/2 !w-fit !h-fit flex z-50 pr-3 group"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {!isOpen && (
+            <div className="relative ">
+              <canvas
+                ref={canvasRef}
+                width="22"
+                height="60"
+                className="cursor-pointer  -mr-1  right-0"
+                // onClick={() => setIsOpen(true)}
+              />
+              <div className="absolute top-1/2 -translate-y-1/2 text-slate-500/50 ">
+                <ChevronLeft />
+              </div>
+            </div>
+          )}
+        </SheetTrigger>
 
-      {isOpen && (
-        <button onClick={() => setIsOpen(false)} className="flex flex-col z-50">
-          <ChevronRight className="p-0 m-0 w-fit flex" />
-        </button>
-      )}
-
-      <SheetContent side="right" className="h-auto">
-        <SheetHeader>
-          <div className="flex justify-between">
-            <SheetTitle>Are you absolutely sure?</SheetTitle>
-            {/* <button
-              onClick={() => setIsOpen(false)}
-              className="text-slate-400/70"
-            >
-              <X size={15} /> */}
-            {/* </button> */}
+        <SheetContent side="right" className="h-auto  ">
+          <div className="absolute left-0 top-1/2 -translate-y-1/2    w-2 h-fit    z-50 flex justify-center items-center ">
+            <SheetClose>
+              <div className="bg-white p-3 rounded-full mr-2">
+                <div className="w-2 bg-gray-700/80 h-20 rounded-md"></div>
+              </div>
+            </SheetClose>
           </div>
-          <SheetDescription>This action cannot be undone.</SheetDescription>
-        </SheetHeader>
-        <div className="flex flex-col gap-2">
-          <ColorForm colors={colors} setColors={setColors} isOpen={isOpen} />
-        </div>
-      </SheetContent>
-    </Sheet>
+          <div>
+            <div>
+              <SheetHeader>
+                <div className="flex justify-between">
+                  <SheetTitle>Are you absolutely sure?</SheetTitle>
+                </div>
+                <SheetDescription>
+                  This action cannot be undone.
+                </SheetDescription>
+              </SheetHeader>
+            </div>
+            <div className="flex flex-col gap-2">
+              <ColorForm
+                colors={colors}
+                setColors={setColors}
+                isOpen={isOpen}
+              />
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+      {!isOpen && (
+        <div
+          className="test-div w-3 bg-white bg-opacity-40 z-10 fixed right-0 h-screen  "
+          ref={divRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        ></div>
+      )}
+    </>
   );
 }
