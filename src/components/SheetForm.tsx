@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft } from 'lucide-react';
+import { motion } from 'motion/react';
 import {
   Sheet,
   SheetContent,
@@ -16,6 +17,8 @@ export default function SheetForm({ colors, setColors }: any) {
 
   const divRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const drawTriangle = (opacity: number = 0.4) => {
     const canvas = canvasRef.current;
@@ -42,8 +45,13 @@ export default function SheetForm({ colors, setColors }: any) {
     }
   }, [isOpen]); // Trigger re-drawing when the `isOpen` state changes
 
+  useEffect(() => {
+    isHovered ? drawTriangle(1) : drawTriangle(0.4);
+  }, [isHovered]); // Trigger re-drawing when the `isOpen` state changes
+
   const handleMouseEnter = () => {
     drawTriangle(1); // Change opacity to 1 for the triangle
+    setIsHovered(true);
     if (divRef.current) {
       // divRef.current.style.backgroundColor = 'red'; // Reset div opacity to 0.4
       // console.log('hovered');
@@ -56,6 +64,7 @@ export default function SheetForm({ colors, setColors }: any) {
 
   const handleMouseLeave = () => {
     drawTriangle(0.4); // Reset opacity to 0.4 for the triangle
+    setIsHovered(false);
     if (divRef.current) {
       // divRef.current.style.opacity = '0.4';
 
@@ -67,6 +76,7 @@ export default function SheetForm({ colors, setColors }: any) {
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
+    setIsHovered(false);
     const updatedColors = colors.map((color: any) => ({
       ...color,
       brightness: open ? 'brightness(0.2)' : 'brightness(1)', // Adjust brightness based on open state
@@ -84,16 +94,64 @@ export default function SheetForm({ colors, setColors }: any) {
         >
           {!isOpen && (
             <div className="relative ">
-              <canvas
-                ref={canvasRef}
-                width="22"
-                height="60"
-                className="cursor-pointer  -mr-1  right-0"
-                // onClick={() => setIsOpen(true)}
-              />
-              <div className="absolute top-1/2 -translate-y-1/2 text-slate-500/50 ">
-                <ChevronLeft />
-              </div>
+              {!isHovered && (
+                <>
+                  {' '}
+                  <canvas
+                    ref={canvasRef}
+                    width="22"
+                    height="60"
+                    className="cursor-pointer  -mr-1  "
+                    // onClick={() => setIsOpen(true)}
+                  />
+                  <div className="absolute top-1/2 -translate-y-1/2 text-slate-500/50 ">
+                    <ChevronLeft />
+                  </div>
+                </>
+              )}
+
+              {isHovered && (
+                <>
+                  <motion.canvas
+                    ref={canvasRef}
+                    width="22"
+                    height="60"
+                    className="cursor-pointer  -mr-1"
+                    animate={{
+                      scale: [1, 1.3, 1], // Scales down, then up, and back to normal
+                    }}
+                    // initial={{
+                    //   top: '50%', // Ensures top remains consistent
+                    //   translateY: '-50%', // Keeps translate-y intact
+                    // }}
+                    transition={{
+                      duration: 1, // Total time for the animation
+                      repeat: Infinity, // Repeats the animation infinitely
+                      ease: 'linear', // Smooth easing for the animation
+                    }}
+                    // onClick={() => setIsOpen(true)}
+                  />
+                  <motion.div
+                    className="absolute top-1/2 -translate-y-1/2 text-slate-500/50 "
+                    animate={{
+                      x: [0, -4, 0],
+                      color: ['#3b82f6'],
+                    }}
+                    initial={{
+                      top: '50%',
+                      translateY: '-50%',
+                      color: '#64748b',
+                    }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                  >
+                    <ChevronLeft strokeWidth={4} />
+                  </motion.div>
+                </>
+              )}
             </div>
           )}
         </SheetTrigger>
@@ -101,8 +159,8 @@ export default function SheetForm({ colors, setColors }: any) {
         <SheetContent side="right" className="h-auto  ">
           <div className="absolute left-0 top-1/2 -translate-y-1/2    w-2 h-fit    z-50 flex justify-center items-center ">
             <SheetClose>
-              <div className="bg-white p-3 rounded-full mr-2">
-                <div className="w-2 bg-gray-700/80 h-20 rounded-md"></div>
+              <div className="bg-white py-3 px-2 rounded-full mr-2">
+                <div className="w-2 bg-gray-300/80 h-20 rounded-md"></div>
               </div>
             </SheetClose>
           </div>

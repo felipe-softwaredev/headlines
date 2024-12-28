@@ -48,7 +48,7 @@ const SocketApp = ({ colors }: any) => {
             color={colors[index]}
           />
         ))}
-      {/* {!socketData && arr.map((item, index) => <Headline unavailable={true} />)} */}
+
       {!socketData &&
         arr.map((item, index) => (
           <Headline

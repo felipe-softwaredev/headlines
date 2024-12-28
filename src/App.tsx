@@ -19,13 +19,20 @@ function App() {
     { bgColor: '#111212', textColor: '#ffffff', brightness: 'brightness(1)' },
   ];
 
-  // Initialize colors from localStorage or use default values
-  // const [colors, setColors] = useState(() => {
-  //   const savedColors = localStorage.getItem('colors');
-  //   return savedColors ? JSON.parse(savedColors) : defaultColors;
-  // });
+  const [colors, setColors] = useState(() => {
+    const savedColors = localStorage.getItem('colors');
+    return savedColors ? JSON.parse(savedColors) : defaultColors;
+  });
 
-  const [colors, setColors] = useState(defaultColors);
+  const saveColorsToLocalStorage = (newColors: any) => {
+    localStorage.setItem('colors', JSON.stringify(newColors));
+  };
+
+  const [newSettings, setNewSettings] = useState<boolean>(false);
+
+  useEffect(() => {
+    saveColorsToLocalStorage(colors);
+  }, [colors]);
 
   // This useEffect will run whenever any color in the array changes
 

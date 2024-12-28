@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 
 import { useEffect, useState } from 'react';
 
-const Headline = ({ data, id, color, unavailable = true }: any) => {
+const Headline = ({ data, id, color, unavailable = false }: any) => {
   const parseDateHandler = (date: Date) => {
     const formattedDate = format(
       new Date(date),
