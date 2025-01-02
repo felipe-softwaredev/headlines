@@ -12,8 +12,24 @@ import {
 } from '@/components/ui/sheet';
 import ColorForm from './ColorForm';
 
-export default function SheetForm({ colors, setColors }: any) {
-  const [isOpen, setIsOpen] = useState(false);
+import { type Config } from '@/App';
+
+export type SheetFormProps = {
+  config: Config;
+  setConfig: React.Dispatch<React.SetStateAction<Config>>;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setLocalStorageChange: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function SheetForm({
+  config,
+  setConfig,
+  isOpen,
+  setIsOpen,
+  setLocalStorageChange,
+}: SheetFormProps) {
+  // const [isOpen, setIsOpen] = useState(false);
 
   const divRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -25,14 +41,14 @@ export default function SheetForm({ colors, setColors }: any) {
     if (canvas) {
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`; // Set the fill color with opacity
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
         ctx.beginPath();
-        ctx.moveTo(18, 0); // Top-right point
-        ctx.lineTo(0, 30); // Middle-left point
-        ctx.lineTo(18, 60); // Bottom-right point
+        ctx.moveTo(18, 0);
+        ctx.lineTo(0, 30);
+        ctx.lineTo(18, 60);
         ctx.closePath();
-        ctx.fill(); // Fill the triangle
+        ctx.fill();
       }
     }
   };
@@ -40,48 +56,43 @@ export default function SheetForm({ colors, setColors }: any) {
   useEffect(() => {
     drawTriangle();
     if (!isOpen && divRef.current) {
-      divRef.current.classList.remove('bg-opacity-100'); // Remove low opacity class
-      divRef.current.classList.add('bg-opacity-40'); // Add full opacity class
+      divRef.current.classList.remove('bg-opacity-100');
+      divRef.current.classList.add('bg-opacity-40');
     }
-  }, [isOpen]); // Trigger re-drawing when the `isOpen` state changes
+  }, [isOpen]);
 
   useEffect(() => {
     isHovered ? drawTriangle(1) : drawTriangle(0.4);
-  }, [isHovered]); // Trigger re-drawing when the `isOpen` state changes
+  }, [isHovered]);
 
   const handleMouseEnter = () => {
-    drawTriangle(1); // Change opacity to 1 for the triangle
+    drawTriangle(1);
     setIsHovered(true);
     if (divRef.current) {
-      // divRef.current.style.backgroundColor = 'red'; // Reset div opacity to 0.4
-      // console.log('hovered');
-      // divRef.current.style.opacity = '0.8';
-      // divRef.current.style.opacity = '1'; // Set div opacity to 1
-      divRef.current.classList.remove('bg-opacity-40'); // Remove low opacity class
-      divRef.current.classList.add('bg-opacity-100'); // Add full opacity class
+      divRef.current.classList.remove('bg-opacity-40');
+      divRef.current.classList.add('bg-opacity-100');
     }
   };
 
   const handleMouseLeave = () => {
-    drawTriangle(0.4); // Reset opacity to 0.4 for the triangle
+    drawTriangle(0.4);
     setIsHovered(false);
     if (divRef.current) {
-      // divRef.current.style.opacity = '0.4';
-
-      // divRef.current.style.backgroundColor = 'white'; // Reset div opacity to 0.4
-      divRef.current.classList.remove('bg-opacity-100'); // Remove low opacity class
-      divRef.current.classList.add('bg-opacity-40'); // Add full opacity class
+      divRef.current.classList.remove('bg-opacity-100');
+      divRef.current.classList.add('bg-opacity-40');
     }
   };
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
     setIsHovered(false);
-    const updatedColors = colors.map((color: any) => ({
-      ...color,
-      brightness: open ? 'brightness(0.2)' : 'brightness(1)', // Adjust brightness based on open state
+    setConfig((prevConfig: Config) => ({
+      ...prevConfig,
+      settings: prevConfig.settings.map((color) => ({
+        ...color,
+        brightness: open ? 'brightness(0.2)' : 'brightness(1)',
+      })),
     }));
-    setColors(updatedColors);
   };
 
   return (
@@ -156,7 +167,7 @@ export default function SheetForm({ colors, setColors }: any) {
           )}
         </SheetTrigger>
 
-        <SheetContent side="right" className="h-auto  ">
+        <SheetContent side="right" className="h-auto ">
           <div className="absolute left-0 top-1/2 -translate-y-1/2    w-2 h-fit    z-50 flex justify-center items-center ">
             <SheetClose>
               <div className="bg-white py-3 px-2 rounded-full mr-2">
@@ -165,7 +176,7 @@ export default function SheetForm({ colors, setColors }: any) {
             </SheetClose>
           </div>
           <div>
-            <div>
+            <div className="hidden">
               <SheetHeader>
                 <div className="flex justify-between">
                   <SheetTitle>Are you absolutely sure?</SheetTitle>
@@ -175,11 +186,13 @@ export default function SheetForm({ colors, setColors }: any) {
                 </SheetDescription>
               </SheetHeader>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className=" ">
               <ColorForm
-                colors={colors}
-                setColors={setColors}
+                config={config}
+                setConfig={setConfig}
                 isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                setLocalStorageChange={setLocalStorageChange}
               />
             </div>
           </div>
