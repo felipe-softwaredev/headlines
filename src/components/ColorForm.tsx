@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { type Config, type Settings, defaultConfig } from '@/App';
 
@@ -11,7 +11,6 @@ export default function ColorForm({
   setConfig,
   isOpen,
   setIsOpen,
-  setLocalStorageChange,
 }: SheetFormProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -136,16 +135,14 @@ export default function ColorForm({
     };
     setConfig(updatedConfig);
     localStorage.setItem('config', JSON.stringify(updatedConfig));
-    setLocalStorageChange((prev) => !prev);
-    console.log('change');
+
     setIsOpen(false);
   };
 
-  const handleReset = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleReset = async () => {
     setConfig(defaultConfig);
     localStorage.setItem('config', JSON.stringify(defaultConfig));
-    setLocalStorageChange((prev) => !prev);
-    console.log('change');
+
     setIsOpen(false);
   };
 

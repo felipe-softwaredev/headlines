@@ -34,6 +34,7 @@
     "socket.io-client": "^4.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "ts-newsapi": "^1.0.2",
     "tsx": "^4.19.2",
     "uuid": "^11.0.3",
     "vaul": "^1.1.2",

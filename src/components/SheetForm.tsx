@@ -19,7 +19,6 @@ export type SheetFormProps = {
   setConfig: React.Dispatch<React.SetStateAction<Config>>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setLocalStorageChange: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function SheetForm({
@@ -27,10 +26,7 @@ export default function SheetForm({
   setConfig,
   isOpen,
   setIsOpen,
-  setLocalStorageChange,
 }: SheetFormProps) {
-  // const [isOpen, setIsOpen] = useState(false);
-
   const divRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -113,7 +109,6 @@ export default function SheetForm({
                     width="22"
                     height="60"
                     className="cursor-pointer  -mr-1  "
-                    // onClick={() => setIsOpen(true)}
                   />
                   <div className="absolute top-1/2 -translate-y-1/2 text-slate-500/50 ">
                     <ChevronLeft />
@@ -129,18 +124,13 @@ export default function SheetForm({
                     height="60"
                     className="cursor-pointer  -mr-1"
                     animate={{
-                      scale: [1, 1.3, 1], // Scales down, then up, and back to normal
+                      scale: [1, 1.3, 1],
                     }}
-                    // initial={{
-                    //   top: '50%', // Ensures top remains consistent
-                    //   translateY: '-50%', // Keeps translate-y intact
-                    // }}
                     transition={{
-                      duration: 1, // Total time for the animation
-                      repeat: Infinity, // Repeats the animation infinitely
-                      ease: 'linear', // Smooth easing for the animation
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: 'linear',
                     }}
-                    // onClick={() => setIsOpen(true)}
                   />
                   <motion.div
                     className="absolute top-1/2 -translate-y-1/2 text-slate-500/50 "
@@ -192,7 +182,6 @@ export default function SheetForm({
                 setConfig={setConfig}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                setLocalStorageChange={setLocalStorageChange}
               />
             </div>
           </div>

@@ -6,16 +6,10 @@ type HeadlineProps = {
   id: number;
   settings: Settings;
   isOpen: boolean;
-  unavailable?: boolean;
 };
 
-const Headline = ({
-  id,
-  settings,
-  isOpen,
-  unavailable = false,
-}: HeadlineProps) => {
-  const parseDateHandler = (date: Date) => {
+const Headline = ({ id, settings, isOpen }: HeadlineProps) => {
+  const parseDateHandler = (date: string) => {
     const formattedDate = format(
       new Date(date),
       "MMM do, yyyy 'at' HH:mm 'EST'"
@@ -30,18 +24,18 @@ const Headline = ({
         style={{
           backgroundColor: settings.bgColor,
           color: settings.textColor,
-          filter: settings.brightness, // Apply brightness filter here
+          filter: settings.brightness,
         }}
       >
         <div className="flex  items-baseline gap-1">
           <span className="text-nowrap pl-1">
-            {unavailable ? '[UNAVAILABLE]' : settings.data.source.name}
+            {!settings.data ? '[UNAVAILABLE]' : settings.data.source.name}
           </span>
           <span
             className="text-sm text-nowrap "
             style={{ color: settings.textColor, opacity: 0.8 }}
           >
-            {unavailable
+            {!settings.data
               ? '[UNAVAILABLE]'
               : parseDateHandler(settings.data.publishedAt)}
           </span>
@@ -58,14 +52,17 @@ const Headline = ({
         </div>
 
         <span id={`title-container${id}`} className="text-nowrap text-lg">
-          {unavailable ? '[UNAVAILABLE]' : settings.data.title}
+          {!settings.data ? '[UNAVAILABLE]' : settings.data.title}
         </span>
 
         <span className="truncate text-sm text-nowrap pl-1">
-          {unavailable ? '[UNAVAILABLE]' : settings.data.description}
+          {!settings.data ? '[UNAVAILABLE]' : settings.data.description}
         </span>
-        <div className="self-start  text-sm underline">
-          <a href={unavailable ? '[UNAVAILABLE]' : settings.data.url}>
+        <div className="pl-1  text-sm underline">
+          <a
+            href={!settings.data ? '[UNAVAILABLE]' : settings.data.url}
+            target="_blank"
+          >
             Read here
           </a>{' '}
         </div>

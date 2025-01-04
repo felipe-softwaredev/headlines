@@ -4,7 +4,8 @@ import './App.css';
 import SheetForm from './components/SheetForm';
 import { v4 as uuidv4 } from 'uuid';
 
-// Define defaultConfig outside the App component for export
+import { INewsApiArticle } from 'ts-newsapi';
+
 export const defaultConfig = {
   userId: uuidv4(),
   settings: [
@@ -13,42 +14,42 @@ export const defaultConfig = {
       textColor: '#ffffff',
       brightness: 'brightness(1)',
       category: 'general',
-      data: {},
+      data: null,
     },
     {
       bgColor: '#0be6a0',
       textColor: '#ffffff',
       brightness: 'brightness(1)',
       category: 'general',
-      data: {},
+      data: null,
     },
     {
       bgColor: '#ffc400',
       textColor: '#ffffff',
       brightness: 'brightness(1)',
       category: 'general',
-      data: {},
+      data: null,
     },
     {
       bgColor: '#ff0037',
       textColor: '#ffffff',
       brightness: 'brightness(1)',
       category: 'general',
-      data: {},
+      data: null,
     },
     {
       bgColor: '#720ed0',
       textColor: '#ffffff',
       brightness: 'brightness(1)',
       category: 'general',
-      data: {},
+      data: null,
     },
     {
       bgColor: '#111212',
       textColor: '#ffffff',
       brightness: 'brightness(1)',
       category: 'general',
-      data: {},
+      data: null,
     },
   ],
 };
@@ -63,18 +64,16 @@ export type Settings = {
   textColor: string;
   brightness: string;
   category: string;
-  data: any;
+  data: null | INewsApiArticle;
 };
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [localStorageChange, setLocalStorageChange] = useState<boolean>(false);
-
   const [config, setConfig] = useState<Config>(() => {
-    const savedColors = localStorage.getItem('config');
-    if (savedColors) {
-      return JSON.parse(savedColors);
+    const savedConfig = localStorage.getItem('config');
+    if (savedConfig) {
+      return JSON.parse(savedConfig);
     } else {
       localStorage.setItem('config', JSON.stringify(defaultConfig));
       return defaultConfig;
@@ -83,19 +82,13 @@ function App() {
 
   return (
     <div className="flex h-screen">
-      <SocketApp
-        config={config}
-        setConfig={setConfig}
-        isOpen={isOpen}
-        localStorageChange={localStorageChange}
-      />
+      <SocketApp config={config} setConfig={setConfig} isOpen={isOpen} />
 
       <SheetForm
         config={config}
         setConfig={setConfig}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        setLocalStorageChange={setLocalStorageChange}
       />
     </div>
   );
