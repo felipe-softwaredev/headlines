@@ -135,5 +135,5 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, async () => {
   console.log('Server connected on port: ' + PORT);
-  await fetchNewsForCategories();
+  // await fetchNewsForCategories();
 });
