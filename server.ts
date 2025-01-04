@@ -6,11 +6,27 @@ import { Server } from 'socket.io';
 
 import { createServer } from 'http';
 
+import express from 'express';
+
+import path from 'path';
+
+const app = express();
+
 dotenv.config();
 
 const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
 
-const server = createServer();
+const server = createServer(app);
+
+const __dirname = path.resolve();
+
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Catch-all route for React
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 const io = new Server(server, {
   path: '/server.headlines',
   cors: { credentials: true, origin: true },
@@ -119,5 +135,5 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, async () => {
   console.log('Server connected on port: ' + PORT);
-  // await fetchNewsForCategories();
+  await fetchNewsForCategories();
 });
