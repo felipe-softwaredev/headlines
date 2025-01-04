@@ -12,6 +12,7 @@ const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
 
 const server = createServer();
 const io = new Server(server, {
+  path: '/server.headlines',
   cors: { credentials: true, origin: true },
 });
 
@@ -118,5 +119,5 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, async () => {
   console.log('Server connected on port: ' + PORT);
-  // await fetchNewsForCategories();
+  await fetchNewsForCategories();
 });
