@@ -22,7 +22,6 @@ const __dirname = path.resolve();
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Catch-all route for React
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
@@ -115,9 +114,9 @@ function updateIndices() {
   }
 }
 
-// setInterval(async () => {
-//   await fetchNewsForCategories();
-// }, 900000);
+setInterval(async () => {
+  await fetchNewsForCategories();
+}, 3600000);
 
 setInterval(async () => {
   updateIndices();
@@ -135,5 +134,5 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, async () => {
   console.log('Server connected on port: ' + PORT);
-  // await fetchNewsForCategories();
+  await fetchNewsForCategories();
 });
