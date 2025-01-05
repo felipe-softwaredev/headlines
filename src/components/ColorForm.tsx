@@ -147,16 +147,7 @@ export default function ColorForm({
   };
 
   return (
-    <div className="flex flex-col gap-1 flex-wrap text-sm items-center">
-      <div className="mt-2 flex gap-1 items-center">
-        <label htmlFor="brightness-toggle">Turn all colors to brightness</label>
-        <input
-          type="checkbox"
-          id="brightness-toggle"
-          checked={allBright}
-          onChange={handleCheckboxChange}
-        />
-      </div>
+    <div className="flex flex-col gap-1 flex-wrap text-sm items-center pt-5">
       <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
         {config.settings.map(
           (
@@ -238,15 +229,24 @@ export default function ColorForm({
             );
           }
         )}
+        <div className="flex gap-1 justify-center ">
+          <label htmlFor="brightness-toggle">Set default brightness</label>
+          <input
+            type="checkbox"
+            id="brightness-toggle"
+            checked={allBright}
+            onChange={handleCheckboxChange}
+          />
+        </div>
         <button
           type="submit"
-          className="cursor-pointer border border-black mt-2 "
+          className="cursor-pointer border border-black mt-2 shadow-md rounded focus:shadow-none"
         >
           Save changes on Local Storage
         </button>
         <button
           type="button"
-          className="cursor-pointer border border-black mt-2 "
+          className="cursor-pointer border border-black mt-2 shadow-md rounded focus:shadow-none"
           onClick={handleReset}
         >
           Reset to default
