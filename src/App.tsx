@@ -81,7 +81,7 @@ function App() {
   });
 
   return (
-    <div className="flex h-dvh">
+    <div className="flex max-h-svh">
       <SocketApp config={config} setConfig={setConfig} isOpen={isOpen} />
 
       <SheetForm
