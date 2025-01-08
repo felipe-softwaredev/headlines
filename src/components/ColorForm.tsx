@@ -238,19 +238,21 @@ export default function ColorForm({
             onChange={handleCheckboxChange}
           />
         </div>
-        <button
-          type="submit"
-          className="cursor-pointer border border-black mt-2 shadow-md rounded focus:shadow-none"
-        >
-          Save changes on Local Storage
-        </button>
-        <button
-          type="button"
-          className="cursor-pointer border border-black mt-2 shadow-md rounded focus:shadow-none"
-          onClick={handleReset}
-        >
-          Reset to default
-        </button>
+        <div className="flex flex-row gap-1 md:flex-col">
+          <button
+            type="submit"
+            className="cursor-pointer border border-black  shadow-md rounded focus:shadow-none"
+          >
+            Save Changes
+          </button>
+          <button
+            type="button"
+            className="cursor-pointer border border-black shadow-md rounded focus:shadow-none"
+            onClick={handleReset}
+          >
+            Reset to default
+          </button>
+        </div>
       </form>
     </div>
   );
