@@ -189,7 +189,7 @@ export default function SheetForm({
       </Sheet>
       {!isOpen && (
         <div
-          className="test-div w-3 bg-white bg-opacity-40 z-10 fixed right-0 h-screen  "
+          className="test-div w-3 bg-white bg-opacity-40 z-10 fixed right-0 h-svh max-h-svh  "
           ref={divRef}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
