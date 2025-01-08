@@ -114,25 +114,25 @@ function updateIndices() {
   }
 }
 
-// setInterval(async () => {
-//   await fetchNewsForCategories();
-// }, 3600000);
+setInterval(async () => {
+  await fetchNewsForCategories();
+}, 3600000);
 
-// setInterval(async () => {
-//   updateIndices();
-// }, 300000);
+setInterval(async () => {
+  updateIndices();
+}, 300000);
 
-// io.on('connection', (socket) => {
-//   socket.on('assignId', async (config) => {
-//     socket.join(config.userId);
+io.on('connection', (socket) => {
+  socket.on('assignId', async (config) => {
+    socket.join(config.userId);
 
-//     let updatedConfig = await filterNewsByCategory(config);
+    let updatedConfig = await filterNewsByCategory(config);
 
-//     io.to(config.userId).emit('news', updatedConfig);
-//   });
-// });
+    io.to(config.userId).emit('news', updatedConfig);
+  });
+});
 
 server.listen(PORT, async () => {
   console.log('Server connected on port: ' + PORT);
-  // await fetchNewsForCategories();
+  await fetchNewsForCategories();
 });
