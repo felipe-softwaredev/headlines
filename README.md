@@ -1,5 +1,5 @@
 
-# Live-News - headlines app supported by the News API (alternative to Google News Api)
+# Healines - supported by the News API (alternative to Google News Api)
 
 - Live-News:
   - [Description](#description)
